@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: whatsapp-bot
+    runtime: node
+    buildCommand: npm install && npm install -g pm2
+    startCommand: pm2 start index.js --no-daemon
+    envVars:
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium-browser
+    plan: free

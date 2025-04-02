@@ -12,16 +12,30 @@ const { setupProactiveNotifications } = require('./notifications.js');
 const { understandNaturalLanguage } = require('./nlp.js');
 const { detectLanguage, translateText } = require('./i18n.js');
 
-// Configuration du client WhatsApp
-const chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+// Remplacez dans whatsapp_bot.js :
+const chromePath = process.env.CHROME_PATH || "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+
+// Remplacez la configuration du client par ceci:
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    authStrategy: new LocalAuth({ dataPath: './session' }),
     puppeteer: {
-        executablePath: chromePath,
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu'
+      ]
+    },
+    webVersionCache: {
+      type: 'remote',
+      remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
     }
-});
+  });
 
 // Structure des menus
 const options = {
