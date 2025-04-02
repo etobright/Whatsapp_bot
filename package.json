@@ -1,0 +1,31 @@
+{
+  "name": "fichier-python",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/speech": "^7.0.1",
+    "@vitalets/google-translate-api": "^9.2.1",
+    "axios": "^1.8.4",
+    "express": "^4.21.2",
+    "fluent-ffmpeg": "^2.1.3",
+    "franc": "^6.2.0",
+    "franc-min": "^6.2.0",
+    "free-translate": "^0.6.1",
+    "google-translate-api": "^2.3.0",
+    "gtts": "^0.2.1",
+    "natural": "^8.0.1",
+    "puppeteer-core": "^24.4.0",
+    "qrcode-terminal": "^0.12.0",
+    "sentiment": "^5.0.2",
+    "sqlite3": "^5.1.7",
+    "whatsapp-web.js": "^1.26.0",
+    "ws": "^8.18.1"
+  },
+  "description": ""
+}

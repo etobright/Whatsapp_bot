@@ -1,0 +1,31 @@
+C:\Users\Mme Thelor Ndi\Desktop\FICHIER PYTHON
+
+.\venv\Scripts\activate
+
+ngrok authtoken 2uXxRmchg64Rr8Quv9ITdX0OjEX_5QpGA3LyEJvbHuhYYQ3vD
+
+TWILIO SID: AC136dc91452d89be37b3c5c78661cb49d
+
+TWILIO AUTH TOKEN: e41bfa1455e657e9d62485ebc5bd7ec8
+
+node whatsapp_bot.js
+node server.js
+python Telegram_bot.py
+
+
+TOKEN: 7922920905:AAGfYlyZQbDQiAbNGco4JSHj4qevLb1xNMQ
+API OPEN AI: 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
+
+
+AUTH: ACf15007959e5cbf1b706b58f131ade7d5
+
+ngrok config add-authtoken 2uXxRmchg64Rr8Quv9ITdX0OjEX_5QpGA3LyEJvbHuhYYQ3vD
+
+ngrok http 80
+
+Étapes à suivre :
+On va continuer à améliorer les deux chatbots. Alors je vais déja te soumettre les deux chatbots. Donc celui de whatsapp et telegram. Et ce que j'aimerais c'est que chaque ajout qui sera fait sur le code du chatbot telegram le soit aussi sur le code du chabot whatsapp sans supprimer quoi que ce soit qui était déjà là.
+
+Chabot whatsapp:
+
+cA^m5TevK?^3C_"

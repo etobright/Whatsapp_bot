@@ -1,0 +1,100 @@
+import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+import openai  # Pour ChatGPT
+import os
+import requests
+
+# Remplacez par votre token d'API
+TOKEN = '7922920905:AAGfYlyZQbDQiAbNGco4JSHj4qevLb1xNMQ'
+OPENAI_API_KEY = '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'
+
+# Configurez OpenAI
+openai.api_key = OPENAI_API_KEY
+
+# Configurez les logs pour voir les erreurs
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Cache pour stocker les réponses fréquentes (par exemple, réponses ChatGPT)
+user_cache = {}
+
+# Fonction pour interagir avec ChatGPT
+async def get_chatgpt_response(user_input):
+    if user_input in user_cache:
+        return user_cache[user_input]
+    
+    response = openai.Completion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": user_input}],
+        max_tokens=150,
+    )
+    answer = response['choices'][0]['message']['content']
+    # Mettre en cache la réponse pour le même input
+    user_cache[user_input] = answer
+    return answer
+
+# Fonction de démarrage avec des boutons interactifs
+async def start(update: Update, context: CallbackContext) -> None:
+    keyboard = [
+        [InlineKeyboardButton("Problème de paiement", callback_data='payment')],
+        [InlineKeyboardButton("Téléchargement de document", callback_data='download')],
+        [InlineKeyboardButton("Autre question", callback_data='other')],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text('Bonjour ! Que puis-je faire pour vous aujourd\'hui ?', reply_markup=reply_markup)
+
+# Fonction pour traiter les choix des boutons
+async def button(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == 'payment':
+        await query.edit_message_text('Je suis navré pour ce désagrément. Pouvez-vous s\'il vous plaît me donner votre identifiant unique pour vérifier votre paiement ?')
+    elif query.data == 'download':
+        await query.edit_message_text('Daccord, je vais vous aider à télécharger votre document. Veuillez fournir votre identifiant unique.')
+    elif query.data == 'other':
+        await query.edit_message_text('Je vous écoute. Comment puis-je vous aider ?')
+
+# Fonction pour récupérer un document en utilisant l'identifiant unique (simulation)
+async def get_document(identifier: str) -> str:
+    # Exemple d'appel à un API ou une base de données pour récupérer un document
+    # Si vous avez un vrai service pour cela, remplacez ce code par celui correspondant.
+    # Supposons qu'on retourne simplement un "document" sous forme de lien.
+    return f"https://example.com/documents/{identifier}.pdf"
+
+# Fonction pour gérer les messages et fournir des réponses à l'utilisateur
+async def handle_message(update: Update, context: CallbackContext) -> None:
+    user_message = update.message.text
+    chat_id = update.message.chat.id
+
+    if "bonjour" in user_message.lower():
+        await start(update, context)
+    elif "paiement" in user_message.lower() or "document" in user_message.lower():
+        await update.message.reply_text('D\'accord, veuillez me fournir votre identifiant unique pour que je puisse vous aider.')
+    else:
+        # Demander à ChatGPT de répondre de manière humaine
+        chatgpt_response = await get_chatgpt_response(user_message)
+        await update.message.reply_text(chatgpt_response)
+
+# Webhook fonction pour démarrer le bot en mode Webhook
+async def start_webhook(application: Application):
+    # Configuration du webhook
+    webhook_url = 'https://yourdomain.com/path'  # Remplacez ceci par l'URL de votre serveur
+    await application.bot.set_webhook(webhook_url)
+
+def main():
+    application = Application.builder().token(TOKEN).build()
+
+    # Ajout des gestionnaires
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+    # Démarrer en mode Webhook
+    # Pour un webhook, vous devez avoir un serveur web en ligne pour gérer les requêtes
+    application.run_webhook(port=8443, host="0.0.0.0", url_path="path")
+
+if __name__ == '__main__':
+    main()

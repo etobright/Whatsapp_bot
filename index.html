@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Chatbots</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #34495e;
+        }
+        .stat-card p {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2980b9;
+            margin: 10px 0 0;
+        }
+        .journey-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .journey-section h2 {
+            margin-top: 0;
+        }
+        .journey-item {
+            margin-bottom: 20px;
+        }
+        .journey-item h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+        .journey-item p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            height: 10px;
+            margin: 10px 0;
+        }
+        .progress-bar div {
+            background: #2980b9;
+            height: 100%;
+        }
+        .real-time-stats {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .real-time-stats h2 {
+            margin-top: 0;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard Chatbots</h1>
+
+        <!-- Statistiques principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Utilisateurs Totaux</h3>
+                <p id="total-users">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Utilisateurs WhatsApp</h3>
+                <p id="whatsapp-users">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Utilisateurs Telegram</h3>
+                <p id="telegram-users">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Paiements réussis</h3>
+                <p id="successful-payments">0</p>
+            </div>
+        </div>
+
+        <!-- Parcours Utilisateurs -->
+        <div class="journey-section">
+            <h2>Parcours Utilisateurs</h2>
+
+            <!-- Problèmes de paiement -->
+            <div class="journey-item">
+                <h3>Reçu non généré</h3>
+                <p>0% succès</p>
+                <p>0 utilisateurs</p>
+                <div class="progress-bar">
+                    <div style="width: 0%;"></div>
+                </div>
+                <p>Vérification paiement → Saisie code unique → Génération reçu</p>
+            </div>
+
+            <!-- Téléchargement de documents -->
+            <div class="journey-item">
+                <h3>Fiche de paiement introuvable</h3>
+                <p>0% succès</p>
+                <p>0 utilisateurs</p>
+                <div class="progress-bar">
+                    <div style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions générales -->
+        <div class="journey-section">
+            <h2>Questions générales</h2>
+
+            <div class="journey-item">
+                <h3>Certificat médical</h3>
+                <p>0% succès</p>
+                <p>0 utilisateurs</p>
+                <div class="progress-bar">
+                    <div style="width: 0%;"></div>
+                </div>
+                <p>Information coût → Paiement → Validation code → Téléchargement</p>
+            </div>
+        </div>
+
+        <!-- Modifications -->
+        <div class="journey-section">
+            <h2>Modifications</h2>
+
+            <div class="journey-item">
+                <h3>Correction de date</h3>
+                <p>0% succès</p>
+                <p>0 utilisateurs</p>
+                <div class="progress-bar">
+                    <div style="width: 0%;"></div>
+                </div>
+                <p>Saisie dossier → Vérification → Modification → Confirmation</p>
+            </div>
+        </div>
+
+        <!-- Problèmes techniques -->
+        <div class="journey-section">
+            <h2>Problèmes techniques</h2>
+
+            <div class="journey-item">
+                <h3>Erreur de validation paiement</h3>
+                <p>0% succès</p>
+                <p>0 utilisateurs</p>
+                <div class="progress-bar">
+                    <div style="width: 0%;"></div>
+                </div>
+                <p>Diagnostic → Vérification bancaire → Résolution</p>
+            </div>
+        </div>
+
+        <!-- Statistiques en temps réel -->
+        <div class="real-time-stats">
+            <h2>Statistiques en Temps Réel</h2>
+            <canvas id="realTimeChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Données pour le graphique en temps réel
+        const ctx = document.getElementById('realTimeChart').getContext('2d');
+        const realTimeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+                datasets: [{
+                    label: 'Utilisateurs actifs',
+                    data: [0, 0, 0, 0, 0, 0, 0],  // Initialisé à 0
+                    borderColor: '#2980b9',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Fonction pour récupérer les données du backend
+        async function fetchData() {
+            try {
+                // Récupérer le nombre total d'utilisateurs
+                const totalUsersResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_total_users');
+                const totalUsersData = await totalUsersResponse.json();
+                document.getElementById('total-users').textContent = totalUsersData.total_users;
+
+                // Récupérer le nombre d'utilisateurs WhatsApp
+                const whatsappUsersResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_users_by_platform/whatsapp');
+                const whatsappUsersData = await whatsappUsersResponse.json();
+                document.getElementById('whatsapp-users').textContent = whatsappUsersData.whatsapp_users;
+
+                // Récupérer le nombre d'utilisateurs Telegram
+                const telegramUsersResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_users_by_platform/telegram');
+                const telegramUsersData = await telegramUsersResponse.json();
+                document.getElementById('telegram-users').textContent = telegramUsersData.telegram_users;
+
+                // Récupérer le nombre de paiements réussis
+                const paymentsResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_successful_payments');
+                const paymentsData = await paymentsResponse.json();
+                document.getElementById('successful-payments').textContent = paymentsData.successful_payments;
+
+                // Récupérer les statistiques des parcours
+                const journeyStatsResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_journey_stats');
+                const journeyStatsData = await journeyStatsResponse.json();
+                updateJourneyStats(journeyStatsData);
+
+                // Récupérer les données du graphique en temps réel
+                const realTimeDataResponse = await fetch('https://e6e3-41-202-207-9.ngrok-free.app/get_real_time_data');
+                const realTimeData = await realTimeDataResponse.json();
+                updateChart(realTimeData.real_time_data);  // Mettre à jour le graphique
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données :", error);
+            }
+        }
+
+        // Fonction pour mettre à jour les statistiques des parcours
+        function updateJourneyStats(stats) {
+            const journeyItems = document.querySelectorAll('.journey-item');
+            journeyItems.forEach(item => {
+                const journeyName = item.querySelector('h3').textContent;
+                const count = stats[journeyName] || 0;
+                item.querySelector('p:nth-of-type(2)').textContent = `${count} utilisateurs`;
+
+                // Mettre à jour la barre de progression (exemple simple)
+                const progressBar = item.querySelector('.progress-bar div');
+                progressBar.style.width = `${count}%`;  // Exemple : ajustez la logique selon vos besoins
+            });
+        }
+
+        // Fonction pour mettre à jour le graphique
+        function updateChart(data) {
+            realTimeChart.data.datasets[0].data = data;  // Mettre à jour les données du graphique
+            realTimeChart.update();  // Rafraîchir le graphique
+        }
+
+        // Rafraîchir les données toutes les 5 secondes
+        setInterval(fetchData, 5000);
+
+        // Charger les données au démarrage
+        fetchData();
+    </script>
+</body>
+</html>
